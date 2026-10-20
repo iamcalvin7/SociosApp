@@ -27,7 +27,7 @@ await page.waitForTimeout(400);
 const draft = await page.locator("#studioDraftSelect").inputValue();
 ok("duplicate creates editable draft", draft !== "__original" && !!draft);
 
-const target = page.locator("body h1, body h2, body p, body button").filter({ visible: true }).first();
+const target = page.locator("body h1:visible, body h2:visible, body p:visible, body button:visible").first();
 if (await target.count()) {
   await target.click({ force: true });
   await page.waitForTimeout(300);
