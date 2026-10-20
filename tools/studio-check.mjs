@@ -117,6 +117,19 @@ if (await para.count()) {
 const presenterVisible = await page.locator('aside[aria-label="Presenter panel"]').isVisible().catch(()=>false);
 ok("presenter panel is hidden in Studio", !presenterVisible);
 
+
+
+/* Nested media picker regression */
+const auctionImg = page.locator('[data-widget-id="auctions"] img').first();
+if (await auctionImg.count()) {
+  const box = await auctionImg.boundingBox();
+  if (box) {
+    await page.mouse.click(box.x + box.width / 2, box.y + box.height / 2);
+    await page.waitForTimeout(180);
+    ok("nested auction image wins over clickable card", (await page.locator("#socios-studio-inspector .studio-kicker").textContent()) === "IMAGE");
+  }
+}
+
 ok("no uncaught studio errors", errors.length === 0, errors[0] || "");
 await browser.close();
 
