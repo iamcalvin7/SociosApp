@@ -230,3 +230,154 @@ select,
     border-radius: 16px;
   }
 }
+
+
+/* Homepage remap: replace the captured absolute widget board with a responsive editorial grid. */
+.home-grid > div {
+  width: min(100%, 1280px) !important;
+  margin-inline: auto !important;
+}
+
+.home-grid .react-grid-layout {
+  display: grid !important;
+  grid-template-columns: repeat(12, minmax(0, 1fr)) !important;
+  gap: 20px !important;
+  height: auto !important;
+}
+
+.home-grid .react-grid-item[data-widget-id] {
+  position: static !important;
+  inset: auto !important;
+  width: auto !important;
+  height: auto !important;
+  transform: none !important;
+  min-width: 0;
+}
+
+.home-grid .react-grid-item[data-widget-id] > div {
+  height: 100% !important;
+  padding-bottom: 0 !important;
+}
+
+.home-grid [data-widget-id="fixtures"] {
+  order: 1;
+  grid-column: 1 / -1;
+}
+
+.home-grid [data-widget-id="markets"] {
+  order: 2;
+  grid-column: span 7;
+}
+
+.home-grid [data-widget-id="auctions"] {
+  order: 3;
+  grid-column: span 5;
+}
+
+.home-grid [data-widget-id="polls"] {
+  order: 4;
+  grid-column: span 7;
+}
+
+.home-grid [data-widget-id="socios-token"] {
+  order: 5;
+  grid-column: span 5;
+}
+
+.home-grid [data-widget-id="prepaid-card"] {
+  order: 6;
+  grid-column: 1 / -1;
+}
+
+/* Give the top fixture module a cleaner horizontal rhythm. */
+.home-grid [data-widget-id="fixtures"] [data-card-surface] {
+  padding: 24px;
+}
+
+.home-grid [data-widget-id="fixtures"] .card-nest {
+  background: var(--socios-soft);
+  border-radius: 16px;
+}
+
+/* Markets: data density without tinted boxes. */
+.home-grid [data-widget-id="markets"] [data-card-surface] {
+  padding-bottom: 12px;
+}
+
+.home-grid [data-widget-id="markets"] .wc-scroll {
+  gap: 0 !important;
+}
+
+.home-grid [data-widget-id="markets"] .card-nest {
+  padding-block: 12px !important;
+  border-radius: 0 !important;
+}
+
+/* Promotions become intentional feature blocks rather than generic dashboard cards. */
+.home-grid [data-widget-id="socios-token"] [data-card-surface],
+.home-grid [data-widget-id="prepaid-card"] [data-card-surface] {
+  min-height: 220px;
+  padding: 28px;
+}
+
+.home-grid [data-widget-id="prepaid-card"] [data-card-surface] {
+  min-height: 190px;
+}
+
+/* Keep image-led auction/poll modules airy. */
+.home-grid [data-widget-id="auctions"] [data-card-surface],
+.home-grid [data-widget-id="polls"] [data-card-surface] {
+  padding: 20px;
+}
+
+/* Sidebar active state: one clear signal, not a field of tinted rows. */
+nav.ns-sidebar [aria-current="page"],
+nav.ns-sidebar a[data-active="true"] {
+  color: var(--text-brand, var(--socios-primary)) !important;
+  font-weight: 500 !important;
+}
+
+nav.ns-sidebar a:not([aria-current="page"]):not([data-active="true"]),
+nav.ns-sidebar button:not([aria-current="page"]) {
+  background: transparent !important;
+}
+
+/* Typography hierarchy inspired by the reference without turning the app into a landing page. */
+main h1 {
+  font-weight: 500 !important;
+  letter-spacing: -0.025em !important;
+}
+
+main h2,
+main h3 {
+  font-weight: 500 !important;
+  letter-spacing: -0.015em !important;
+}
+
+@media (max-width: 1023px) {
+  .home-grid .react-grid-layout {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 16px !important;
+  }
+
+  .home-grid .react-grid-item[data-widget-id] {
+    grid-column: span 1 !important;
+  }
+
+  .home-grid [data-widget-id="fixtures"],
+  .home-grid [data-widget-id="prepaid-card"] {
+    grid-column: 1 / -1 !important;
+  }
+}
+
+@media (max-width: 680px) {
+  .home-grid .react-grid-layout {
+    display: flex !important;
+    flex-direction: column;
+    gap: 14px !important;
+  }
+
+  .home-grid .react-grid-item[data-widget-id] {
+    width: 100% !important;
+  }
+}
