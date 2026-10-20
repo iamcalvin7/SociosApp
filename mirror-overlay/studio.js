@@ -228,7 +228,8 @@
   }
 
   function resolveTargetAtPoint(e) {
-    const stack = document.elementsFromPoint(e.clientX, e.clientY);
+    const hasPoint = Number.isFinite(e.clientX) && Number.isFinite(e.clientY) && (e.clientX !== 0 || e.clientY !== 0);
+    const stack = (!e.isTrusted || !hasPoint) && e.target ? [e.target] : document.elementsFromPoint(e.clientX, e.clientY);
     for (const el of stack) {
       if (!el || el === document.documentElement || el === document.body || isStudioNode(el)) continue;
       const tag = el.tagName?.toLowerCase?.() || "";
