@@ -232,15 +232,22 @@
     const rawStack = (!e.isTrusted || !hasPoint) && e.target ? [e.target] : document.elementsFromPoint(e.clientX, e.clientY);
     const stack = rawStack.filter((el) => el && el !== document.documentElement && el !== document.body && !isStudioNode(el));
 
-    // Prefer actual visible media over clickable ancestor cards. This is critical
-    // for cards that use role="button" around an image.
+    // Prefer nested media only when the pointer is inside a clickable card.
+    // This avoids selecting decorative/background images sitting behind ordinary text.
+    const card = stack[0]?.closest?.("a,button,[role='button']");
+    if (card) {
+      for (const el of stack) {
+        const tag = el.tagName?.toLowerCase?.() || "";
+        if ((tag === "img" || tag === "picture") && card.contains(el)) {
+          return tag === "picture" ? (el.querySelector("img") || el) : el;
+        }
+      }
+    }
+
     for (const el of stack) {
       const tag = el.tagName?.toLowerCase?.() || "";
       if (tag === "img") return el;
       if (tag === "picture") return el.querySelector("img") || el;
-    }
-
-    for (const el of stack) {
       const tag = el.tagName?.toLowerCase?.() || "";
       if (["path","circle","rect","line","polyline","polygon"].includes(tag)) {
         const chart = chartRoot(el);
