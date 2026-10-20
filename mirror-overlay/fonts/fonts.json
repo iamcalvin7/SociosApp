@@ -4,111 +4,127 @@
     "family": "Alcyone",
     "weight": 500,
     "size": 34656,
-    "uploadedAt": 1791879022587
+    "uploadedAt": 1791879022587,
+    "style": "italic"
   },
   {
     "file": "Alcyone-SemiBold.otf",
     "family": "Alcyone",
     "weight": 600,
     "size": 34808,
-    "uploadedAt": 1791879022594
+    "uploadedAt": 1791879022594,
+    "style": "normal"
   },
   {
     "file": "Alcyone-RegularItalic.otf",
     "family": "Alcyone",
     "weight": 400,
     "size": 33396,
-    "uploadedAt": 1791879022605
+    "uploadedAt": 1791879022605,
+    "style": "italic"
   },
   {
     "file": "Alcyone-Black.otf",
     "family": "Alcyone",
     "weight": 900,
     "size": 35536,
-    "uploadedAt": 1791879022613
+    "uploadedAt": 1791879022613,
+    "style": "normal"
   },
   {
     "file": "Alcyone-Light.otf",
     "family": "Alcyone",
     "weight": 300,
     "size": 32296,
-    "uploadedAt": 1791879022636
+    "uploadedAt": 1791879022636,
+    "style": "normal"
   },
   {
     "file": "Alcyone-BlackItalic.otf",
     "family": "Alcyone",
     "weight": 900,
     "size": 35480,
-    "uploadedAt": 1791879022641
+    "uploadedAt": 1791879022641,
+    "style": "italic"
   },
   {
     "file": "Alcyone-LightItalic.otf",
     "family": "Alcyone",
     "weight": 300,
     "size": 33956,
-    "uploadedAt": 1791879022652
+    "uploadedAt": 1791879022652,
+    "style": "italic"
   },
   {
     "file": "Alcyone-ExtraLightItalic.otf",
     "family": "Alcyone",
     "weight": 200,
     "size": 34308,
-    "uploadedAt": 1791879022657
+    "uploadedAt": 1791879022657,
+    "style": "italic"
   },
   {
     "file": "Alcyone-Thin.otf",
     "family": "Alcyone",
     "weight": 100,
     "size": 31144,
-    "uploadedAt": 1791879022661
+    "uploadedAt": 1791879022661,
+    "style": "normal"
   },
   {
     "file": "Alcyone-Medium.otf",
     "family": "Alcyone",
     "weight": 500,
     "size": 33796,
-    "uploadedAt": 1791879022673
+    "uploadedAt": 1791879022673,
+    "style": "normal"
   },
   {
     "file": "Alcyone-Regular.otf",
     "family": "Alcyone",
     "weight": 400,
     "size": 32432,
-    "uploadedAt": 1791879022682
+    "uploadedAt": 1791879022682,
+    "style": "normal"
   },
   {
     "file": "Alcyone-BoldItalic.otf",
     "family": "Alcyone",
     "weight": 700,
     "size": 35848,
-    "uploadedAt": 1791879022687
+    "uploadedAt": 1791879022687,
+    "style": "italic"
   },
   {
     "file": "Alcyone-SemiBoldItalic.otf",
     "family": "Alcyone",
     "weight": 600,
     "size": 35080,
-    "uploadedAt": 1791879022692
+    "uploadedAt": 1791879022692,
+    "style": "italic"
   },
   {
     "file": "Alcyone-ExtraLight.otf",
     "family": "Alcyone",
     "weight": 200,
     "size": 32392,
-    "uploadedAt": 1791879022699
+    "uploadedAt": 1791879022699,
+    "style": "normal"
   },
   {
     "file": "Alcyone-Bold.otf",
     "family": "Alcyone",
     "weight": 700,
     "size": 35544,
-    "uploadedAt": 1791879022702
+    "uploadedAt": 1791879022702,
+    "style": "normal"
   },
   {
     "file": "Alcyone-ThinItalic.otf",
     "family": "Alcyone",
     "weight": 100,
     "size": 32260,
-    "uploadedAt": 1791879022704
+    "uploadedAt": 1791879022704,
+    "style": "italic"
   }
 ]

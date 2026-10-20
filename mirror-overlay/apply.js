@@ -532,7 +532,7 @@
       rules.push(
         `@font-face{font-family:"${fam}";src:url(/__dse/fonts/${encodeURIComponent(f.file)})${
           formats[ext] ? ` format("${formats[ext]}")` : ""
-        };${f.weight ? `font-weight:${f.weight};` : ""}font-display:swap;}`
+        };${f.weight ? `font-weight:${f.weight};` : ""}${f.style ? `font-style:${String(f.style).replace(/[^a-z-]/gi, "")};` : ""}font-display:swap;}`
       );
     }
     let el = document.getElementById("dse-fonts");
