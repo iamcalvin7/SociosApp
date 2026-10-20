@@ -32,6 +32,7 @@
   let lastChange = null;
   let saveTimer = 0;
   let hovering = null;
+  let editMode = true;
 
   function loadDrafts() {
     try { drafts = JSON.parse(localStorage.getItem(DRAFTS_KEY) || "{}"); } catch { drafts = {}; }
@@ -188,7 +189,7 @@
     if (!bar) {
       bar = document.createElement("div");
       bar.id = "socios-studio-toolbar";
-      bar.innerHTML = '<span class="studio-brand">Socios Studio</span><select id="studioDraftSelect" aria-label="Version"></select><button id="studioDuplicate" class="primary">Duplicate</button><button id="studioRename">Rename</button><span class="studio-sep"></span><button id="studioUndo">Undo</button><button id="studioRedo">Redo</button><button id="studioSave">Save</button><span class="studio-state">Saved</span><span class="studio-sep"></span><button id="studioExit">Exit</button>';
+      bar.innerHTML = '<span class="studio-brand">Socios Studio</span><select id="studioDraftSelect" aria-label="Version"></select><button id="studioDuplicate" class="primary">Duplicate</button><button id="studioRename">Rename</button><button id="studioMode">Browse</button><span class="studio-sep"></span><button id="studioUndo">Undo</button><button id="studioRedo">Redo</button><button id="studioSave">Save</button><span class="studio-state">Saved</span><span class="studio-sep"></span><button id="studioExit">Exit</button>';
       document.documentElement.appendChild(bar);
       bar.addEventListener("mousedown", (e) => e.stopPropagation());
       bar.addEventListener("click", (e) => e.stopPropagation());
@@ -202,6 +203,14 @@
     bar.querySelector("#studioDuplicate").onclick = duplicateActive;
     bar.querySelector("#studioRename").onclick = renameActive;
     bar.querySelector("#studioRename").disabled = activeId === ORIGINAL_ID;
+    const mode = bar.querySelector("#studioMode");
+    mode.textContent = editMode ? "Browse" : "Edit";
+    mode.disabled = activeId === ORIGINAL_ID;
+    mode.onclick = () => {
+      editMode = !editMode;
+      clearSelection();
+      renderToolbar();
+    };
     bar.querySelector("#studioUndo").onclick = undo;
     bar.querySelector("#studioRedo").onclick = redo;
     bar.querySelector("#studioSave").onclick = () => { persistDrafts(); setState("Saved"); };
@@ -626,7 +635,7 @@
   }
 
   document.addEventListener("mouseover",(e)=>{
-    if (activeId === ORIGINAL_ID || isStudioNode(e.target)) return;
+    if (activeId === ORIGINAL_ID || !editMode || isStudioNode(e.target)) return;
     const raw = e.target;
     const target = chartRoot(raw) || raw;
     if (hovering && hovering !== target) hovering.removeAttribute("data-studio-hover");
@@ -640,7 +649,7 @@
   },true);
 
   document.addEventListener("click",(e)=>{
-    if (activeId === ORIGINAL_ID || isStudioNode(e.target)) return;
+    if (activeId === ORIGINAL_ID || !editMode || isStudioNode(e.target)) return;
     e.preventDefault();
     e.stopPropagation();
     e.stopImmediatePropagation();
