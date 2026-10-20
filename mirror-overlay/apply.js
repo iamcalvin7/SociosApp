@@ -599,11 +599,11 @@
     a.href = "/__dse/editor";
     a.target = "_blank";
     a.rel = "noopener";
-    a.title = "Open the Design System Editor";
+    a.title = "Open Socios Studio";
     const dot = document.createElement("span");
     dot.className = "dse-dot";
     const label = document.createElement("span");
-    label.textContent = "Design editor";
+    label.textContent = "Edit page";
     a.append(dot, label);
     document.documentElement.appendChild(a);
   }

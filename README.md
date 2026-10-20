@@ -1,8 +1,6 @@
 # Socios prototype — local mirror
 
-Offline-capable local mirror of the deployed Socios redesign prototype, plus a
-click-to-edit visual editor for changing the live app without exposing CSS,
-tokens or selectors.
+Offline-capable local mirror of the deployed Socios redesign prototype, plus **Socios Studio**: direct editing on the real page.
 
 ## Run
 
@@ -12,52 +10,60 @@ MIRROR_OFFLINE=1 npm start  # never touches the origin deploy
 npm run resync              # re-capture changed pages/chunks from the origin
 ```
 
-Open **`/__dse/editor`** (e.g. `http://localhost:3000/__dse/editor`), or click
-the **Design editor** pill injected at the bottom-left of every served page.
+Open **`/__dse/editor`** or click **Edit page** at the bottom-left of the app.
 
-## Visual editor
+## Socios Studio
 
-The editor is a small rail next to a live preview of the app.
+Studio replaces the iframe-based editor as the default workflow.
 
-### Edit one thing
+### Versions
 
-1. Click **Select**.
-2. Click any object in the preview: a button, text, image, icon, card,
-   input or page background.
-3. Change it with plain-language controls: colour, size, weight, spacing,
-   corner radius, wording, image, alignment and so on.
+- **Original** is always available and read-only.
+- Click **Duplicate** to create an editable draft from Original.
+- Duplicate an existing draft to branch a design direction.
+- Drafts autosave in the browser and can be renamed.
+- Switch between Original and drafts from the top floating toolbar.
+- Use **Browse** to navigate the app normally and **Edit** to resume click-to-edit selection.
 
-The inspector only shows controls that make sense for the selected object.
-`Esc` closes it. Hovering the preview highlights the clickable target.
+### Edit the actual page
 
-**Apply to similar** repeats the change on matching objects (for example
-every primary button). It is offered only when the change is safe to repeat.
+There is no miniature preview. Studio runs directly on the real Socios page.
 
-**Reset** in the inspector removes every edit made to that object.
+1. Duplicate Original.
+2. Hover any visible element.
+3. Click it.
+4. Change the properties in the contextual inspector.
 
-### Brand
+The selected DOM/SVG element is edited with page-scoped overrides, so React/SPA re-renders keep the change without rewriting the captured build.
 
-**Brand** edits the whole app at once: primary and secondary colour,
-background, card colour, main text, font and corner roundness. Changing the
-primary colour also derives pressed, accessible, subtle and text-on-brand
-tints so copy stays legible.
+### What is editable
 
-### Concepts
+Studio exposes dedicated controls for common properties and a universal CSS-property fallback.
 
-A concept is a saved direction. The dropdown at the top switches between
-saved concepts; **…** creates, duplicates, renames and deletes them. Changes
-save automatically (`Saving… → Saved`) and the active concept is restored on
-reload.
+- **Text:** content, family, weight, size, line height, tracking, alignment, style and colour.
+- **Buttons and containers:** colours, borders, radius, opacity, dimensions, spacing and layout.
+- **Images:** replace, size, fit, position, radius and opacity.
+- **SVG/icons:** fill, stroke, stroke width, opacity and SVG replacement.
+- **Charts:** chart SVGs are detected as charts instead of generic icons. Their real series/fill colours are surfaced directly.
+- **Layout:** width, height, padding, margin, display, gap, flex direction, justify and alignment.
+- **Anything else:** enter any CSS property/value in **Any CSS property**.
 
-### Compare, undo and handoff
+**Apply last change to similar** is opt-in rather than automatic.
 
-- **Original / Edited** (or hold `C`) temporarily hides all edits.
-- Undo and redo support the buttons and `Cmd/Ctrl+Z` / `Shift+Cmd/Ctrl+Z`.
-- **Export** produces a human-readable list of changes grouped by object,
-  plus developer details behind a disclosure. Copy it, download the concept
-  as JSON, or download the uploaded assets.
+### Safety and history
 
-### Portable themes
+- Original is immutable.
+- Undo/redo are draft-local.
+- **Reset selected** removes overrides for the selected element.
+- **Hide** is reversible through undo/reset.
+- **Exit** returns to the normal app.
+- Existing design-system technology remains underneath Studio, but is no longer part of the normal editing workflow.
+
+### Legacy editor
+
+The previous design-system editor is preserved at **`/__dse/legacy`** for compatibility, theme import/export and advanced token work.
+
+## Legacy editor features\n\n### Portable themes
 
 **+ Upload theme** imports a `.json` design system next to the concept
 selector. It validates the portable schema, reads the theme name and shows a
@@ -151,3 +157,31 @@ Editor state is local to the browser profile:
   width.
 
 Uploaded font files live server-side in `mirror-overlay/fonts/`.
+
+
+## Studio files
+
+- `mirror-overlay/studio.js` — live page selection, drafts, inspector, charts, assets and undo/redo.
+- `mirror-overlay/studio.css` — floating toolbar, inspector and selection UI.
+- `mirror-overlay/editor.html` — lightweight entry point that opens Studio on the actual app.
+- `mirror-overlay/legacy.html` — preserved previous editor.
+- `mirror-overlay/apply.js` — low-level override runtime used by both Studio and the legacy editor.
+- `server.mjs` — injects Studio/runtime resources into mirrored pages.
+
+## Verification
+
+With the local service running:
+
+```
+npm run check
+```
+
+This runs both the preserved legacy-editor checks and the new Socios Studio checks.
+
+## Studio storage
+
+- `dse.studio.drafts.v1` — Studio drafts.
+- `dse.studio.activeDraft.v1` — last selected Studio version.
+- Existing `dse.*` keys remain for the legacy editor and low-level runtime.
+
+Uploaded font files remain server-side in `mirror-overlay/fonts/`.

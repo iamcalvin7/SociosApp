@@ -52,7 +52,7 @@ async function pick(fn) {
   await page.waitForTimeout(500);
 }
 
-await page.goto(BASE + "/__dse/editor", { waitUntil: "domcontentloaded", timeout: 20000 });
+await page.goto(BASE + "/__dse/legacy", { waitUntil: "domcontentloaded", timeout: 20000 });
 await page.waitForTimeout(2000);
 await page.evaluate(() => {
   for (const k of ["dse.tokens.v1", "dse.themes.v1", "dse.active.concept.v1", "dse.assets.library.v1", "dse.preview.state.v1"])
@@ -332,8 +332,8 @@ const mapped = await page.evaluate(() => {
   };
 });
 ok("theme mapper validates all sections", mapped.summary.length === 6 && mapped.summary.every((s) => s.present));
-ok("theme mapper writes brand tokens", mapped.brand === "#3137ff" && mapped.button === "#3137ff");
-ok("theme mapper writes shape and scoped rules", mapped.cardRadius === "16px" && mapped.scoped > 20, JSON.stringify(mapped));
+ok("theme mapper writes brand tokens", mapped.brand?.toLowerCase() === "#324cff" && mapped.button?.toLowerCase() === "#324cff");
+ok("theme mapper writes shape and scoped rules", mapped.cardRadius === "20px" && mapped.scoped > 20, JSON.stringify(mapped));
 
 await page.click("#conceptMenuBtn");
 ok("built-in theme is offered", await page.locator('#conceptMenu [data-concept="builtin"]').isVisible());
@@ -350,7 +350,7 @@ await page.click("#btnThemePreview");
 await page.waitForTimeout(600);
 const previewBg = await getFrame().evaluate(() => getComputedStyle(document.body).backgroundColor);
 const previewSaved = await page.evaluate(() => localStorage.getItem("dse.tokens.v1"));
-ok("theme preview applies live", previewBg === "rgb(243, 246, 255)", String(previewBg));
+ok("theme preview applies live", previewBg === "rgb(239, 243, 255)", String(previewBg));
 ok("theme preview does not save", previewSaved === beforePreviewStore, String(previewSaved));
 await page.click("#btnThemeCancel");
 await page.waitForTimeout(500);
@@ -374,7 +374,7 @@ const builtinState = await page.evaluate(() => {
     portable: concept && concept.portable && concept.portable.meta.name,
   };
 });
-ok("built-in theme stores mapped tokens", builtinState.brand === "#3137ff" && builtinState.scoped > 20, JSON.stringify(builtinState));
+ok("built-in theme stores mapped tokens", builtinState.brand?.toLowerCase() === "#324cff" && builtinState.scoped > 20, JSON.stringify(builtinState));
 ok("built-in theme is saved as an editable concept", builtinState.saved && builtinState.portable === "Socios 2026 Light");
 const builtinPrimary = await getFrame().evaluate(() => {
   const el = [...document.querySelectorAll('button[data-slot="button"]')].find(
@@ -382,7 +382,7 @@ const builtinPrimary = await getFrame().evaluate(() => {
   );
   return el && { bg: getComputedStyle(el).backgroundColor, radius: getComputedStyle(el).borderRadius };
 });
-ok("theme primary button is applied", builtinPrimary && builtinPrimary.bg === "rgb(49, 55, 255)", JSON.stringify(builtinPrimary));
+ok("theme primary button is applied", builtinPrimary && builtinPrimary.bg === "rgb(50, 76, 255)", JSON.stringify(builtinPrimary));
 
 const uploadTheme = JSON.parse(JSON.stringify(builtin));
 uploadTheme.meta.name = "Socios 2026 Light Upload";

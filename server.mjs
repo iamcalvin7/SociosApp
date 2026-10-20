@@ -104,7 +104,7 @@ function sendFile(res, file, { status = 200, cache = "no-store" } = {}) {
   stream.pipe(res);
 }
 
-const DSE_SCRIPT = '<link id="dse-premium-css" rel="stylesheet" href="/__dse/premium-redesign.css" media="not all"><script src="/__dse/apply.js" defer></script>';
+const DSE_SCRIPT = '<link id="dse-premium-css" rel="stylesheet" href="/__dse/premium-redesign.css" media="not all"><link rel="stylesheet" href="/__dse/studio.css"><script src="/__dse/apply.js" defer></script><script src="/__dse/studio.js" defer></script>';
 
 function injectDse(html) {
   if (html.includes("/__dse/apply.js")) return html;
@@ -135,6 +135,7 @@ async function sendPageHtml(res, file, { status = 200, cache = "no-store" } = {}
 async function dseFileFor(reqPath) {
   let rel = reqPath.replace(/^\/__dse\/?/, "");
   if (!rel || rel === "editor") rel = "editor.html";
+  if (rel === "legacy") rel = "legacy.html";
   const file = safeJoin(OVERLAY, "/" + rel);
   if (!file) return null;
   return (await isFile(file)) ? file : null;
