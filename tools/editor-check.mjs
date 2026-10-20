@@ -52,7 +52,7 @@ async function pick(fn) {
   await page.waitForTimeout(500);
 }
 
-await page.goto(BASE + "/__dse/editor", { waitUntil: "domcontentloaded", timeout: 20000 });
+await page.goto(BASE + "/__dse/legacy", { waitUntil: "domcontentloaded", timeout: 20000 });
 await page.waitForTimeout(2000);
 await page.evaluate(() => {
   for (const k of ["dse.tokens.v1", "dse.themes.v1", "dse.active.concept.v1", "dse.assets.library.v1", "dse.preview.state.v1"])
