@@ -122,6 +122,8 @@ ok("presenter panel is hidden in Studio", !presenterVisible);
 /* Nested media picker regression */
 const auctionImg = page.locator('[data-widget-id="auctions"] img').first();
 if (await auctionImg.count()) {
+  await auctionImg.scrollIntoViewIfNeeded();
+  await page.waitForTimeout(250);
   const box = await auctionImg.boundingBox();
   if (box) {
     await page.mouse.click(box.x + box.width / 2, box.y + box.height / 2);
