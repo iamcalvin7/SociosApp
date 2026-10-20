@@ -172,6 +172,7 @@
   }
 
   function exitStudio() {
+    document.documentElement.removeAttribute("data-studio-active");
     try {
       sessionStorage.removeItem(ACTIVE_KEY);
       localStorage.removeItem(ACTIVE_DRAFT_KEY);
@@ -218,8 +219,46 @@
     updateUndoRedo();
   }
 
+  function isPresenterUi(el) {
+    return !!el?.closest?.('aside[aria-label="Presenter panel"]');
+  }
+
   function isStudioNode(el) {
-    return !!el?.closest?.("#socios-studio-toolbar,#socios-studio-inspector,#dse-open-editor");
+    return !!el?.closest?.("#socios-studio-toolbar,#socios-studio-inspector,#dse-open-editor") || isPresenterUi(el);
+  }
+
+  function resolveTargetAtPoint(e) {
+    const hasPoint = Number.isFinite(e.clientX) && Number.isFinite(e.clientY) && (e.clientX !== 0 || e.clientY !== 0);
+    const stack = (!e.isTrusted || !hasPoint) && e.target ? [e.target] : document.elementsFromPoint(e.clientX, e.clientY);
+    for (const el of stack) {
+      if (!el || el === document.documentElement || el === document.body || isStudioNode(el)) continue;
+      const tag = el.tagName?.toLowerCase?.() || "";
+
+      if (tag === "img" || tag === "picture") return tag === "picture" ? (el.querySelector("img") || el) : el;
+
+      if (["path","circle","rect","line","polyline","polygon"].includes(tag)) {
+        const chart = chartRoot(el);
+        if (chart) return chart;
+        return el.closest("svg") || el;
+      }
+
+      if (tag === "svg") {
+        const chart = chartRoot(el);
+        return chart || el;
+      }
+
+      const chart = chartRoot(el);
+      if (chart) return chart;
+
+      const bg = getComputedStyle(el).backgroundImage;
+      if (bg && bg !== "none") return el;
+
+      const control = el.closest?.("button,[role='button']");
+      if (control && !isPresenterUi(control)) return control;
+
+      return el;
+    }
+    return null;
   }
 
   function unique(sel) {
@@ -315,12 +354,14 @@
   }
 
   function selectElement(raw) {
-    if (activeId === ORIGINAL_ID) return;
+    if (activeId === ORIGINAL_ID || !raw || isStudioNode(raw)) return;
     const chart = chartRoot(raw);
     selected = chart || raw;
     if (chart) chart.dataset.studioChart = "1";
     selectedSelector = selectorFor(selected);
     document.querySelectorAll("[data-studio-selected]").forEach((n) => n.removeAttribute("data-studio-selected"));
+    document.querySelectorAll("[data-studio-hover]").forEach((n) => n.removeAttribute("data-studio-hover"));
+    hovering = null;
     selected.setAttribute("data-studio-selected","");
     renderInspector();
   }
@@ -666,18 +707,28 @@
     actions.appendChild(wrap);
   }
 
-  document.addEventListener("mouseover",(e)=>{
+  document.addEventListener("mousemove",(e)=>{
     if (activeId === ORIGINAL_ID || !editMode || isStudioNode(e.target)) return;
-    const raw = e.target;
-    const target = chartRoot(raw) || raw;
-    if (hovering && hovering !== target) hovering.removeAttribute("data-studio-hover");
+    const target = resolveTargetAtPoint(e);
+    if (!target) return;
+    if (hovering && hovering !== target && hovering !== selected) hovering.removeAttribute("data-studio-hover");
     hovering = target;
     if (target !== selected) target.setAttribute("data-studio-hover","");
   },true);
 
-  document.addEventListener("mouseout",(e)=>{
+  document.addEventListener("mouseleave",()=>{
     if (hovering && hovering !== selected) hovering.removeAttribute("data-studio-hover");
     hovering = null;
+  },true);
+
+  document.addEventListener("pointerdown",(e)=>{
+    if (activeId === ORIGINAL_ID || !editMode || isStudioNode(e.target)) return;
+    const target = resolveTargetAtPoint(e);
+    if (!target) return;
+    e.preventDefault();
+    e.stopPropagation();
+    e.stopImmediatePropagation();
+    selectElement(target);
   },true);
 
   document.addEventListener("click",(e)=>{
@@ -685,7 +736,6 @@
     e.preventDefault();
     e.stopPropagation();
     e.stopImmediatePropagation();
-    selectElement(e.target);
   },true);
 
   document.addEventListener("keydown",(e)=>{
@@ -699,6 +749,7 @@
 
   function boot() {
     if (!window.__dse) return setTimeout(boot,50);
+    document.documentElement.setAttribute("data-studio-active","");
     loadDrafts();
     renderToolbar();
     applyActive();

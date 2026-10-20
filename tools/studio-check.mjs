@@ -59,7 +59,7 @@ const chartHit = await page.evaluate(() => {
   });
   if (!candidate) return false;
   const child = candidate.querySelector("path,line,rect,circle,polyline,polygon") || candidate;
-  child.dispatchEvent(new MouseEvent("click", { bubbles:true, cancelable:true, view:window }));
+  child.dispatchEvent(new MouseEvent("pointerdown", { bubbles:true, cancelable:true, view:window }));
   return true;
 });
 if (chartHit) {
@@ -70,7 +70,7 @@ if (chartHit) {
 const buttonSelected = await page.evaluate(() => {
   const b = [...document.querySelectorAll("button,a")].find((e) => /Buy your first fan token/i.test((e.textContent||"").trim()));
   if (!b) return false;
-  b.dispatchEvent(new MouseEvent("click",{bubbles:true,cancelable:true,view:window}));
+  b.dispatchEvent(new MouseEvent("pointerdown",{bubbles:true,cancelable:true,view:window}));
   return true;
 });
 if (buttonSelected) {
@@ -85,13 +85,37 @@ const bgSelected = await page.evaluate(() => {
     return bg && bg !== "none" && r.width > 300 && r.height > 150;
   });
   if (!el) return false;
-  el.dispatchEvent(new MouseEvent("click",{bubbles:true,cancelable:true,view:window}));
+  el.dispatchEvent(new MouseEvent("pointerdown",{bubbles:true,cancelable:true,view:window}));
   return true;
 });
 if (bgSelected) {
   await page.waitForTimeout(200);
   ok("CSS background image can be replaced", (await page.locator("#socios-studio-inspector").textContent()).includes("Background image"));
 }
+
+
+
+/* Picker target synchronization regressions */
+await page.goto(BASE + "/__dse/editor", { waitUntil: "domcontentloaded", timeout: 20000 });
+await page.waitForTimeout(900);
+if ((await page.locator("#studioDraftSelect").inputValue()) === "__original") {
+  await page.click("#studioDuplicate");
+  await page.waitForTimeout(200);
+}
+const para = page.locator('p:visible').filter({ hasText: /Socios is where fans get their club/i }).first();
+if (await para.count()) {
+  const box = await para.boundingBox();
+  if (box) {
+    await page.mouse.click(box.x + Math.min(40, box.width/2), box.y + Math.min(18, box.height/2));
+    await page.waitForTimeout(200);
+    const selectedText = await page.locator("[data-studio-selected]").textContent().catch(()=> "");
+    const inspectorTitle = await page.locator("#socios-studio-inspector .studio-title").textContent().catch(()=> "");
+    ok("picker inspector matches visibly selected paragraph", /Socios is where fans get their club/i.test(selectedText || "") && /Socios is where fans get their club/i.test(inspectorTitle || ""));
+  }
+}
+
+const presenterVisible = await page.locator('aside[aria-label="Presenter panel"]').isVisible().catch(()=>false);
+ok("presenter panel is hidden in Studio", !presenterVisible);
 
 ok("no uncaught studio errors", errors.length === 0, errors[0] || "");
 await browser.close();
