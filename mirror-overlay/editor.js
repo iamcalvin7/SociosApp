@@ -396,19 +396,6 @@
     } catch {
       themes = {};
     }
-    if (!themes["Socios Premium 2026"] && window.SociosThemeSystem) {
-      try {
-        const raw = window.SociosThemeSystem.builtin("socios-premium-2026");
-        const parsed = window.SociosThemeSystem.parse(raw);
-        themes["Socios Premium 2026"] = {
-          savedAt: Date.now(),
-          preset: "premium-2026",
-          source: "builtin",
-          data: window.SociosThemeSystem.mapTheme(parsed.theme),
-        };
-        saveThemes();
-      } catch {}
-    }
   }
 
   function saveThemes() {
