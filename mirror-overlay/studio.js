@@ -229,27 +229,39 @@
 
   function resolveTargetAtPoint(e) {
     const hasPoint = Number.isFinite(e.clientX) && Number.isFinite(e.clientY) && (e.clientX !== 0 || e.clientY !== 0);
-    const stack = (!e.isTrusted || !hasPoint) && e.target ? [e.target] : document.elementsFromPoint(e.clientX, e.clientY);
+    const rawStack = (!e.isTrusted || !hasPoint) && e.target ? [e.target] : document.elementsFromPoint(e.clientX, e.clientY);
+    const stack = rawStack.filter((el) => el && el !== document.documentElement && el !== document.body && !isStudioNode(el));
+
+    // Prefer nested media only when the pointer is inside a clickable card.
+    // This avoids selecting decorative/background images sitting behind ordinary text.
+    const card = stack[0]?.closest?.("a,button,[role='button']");
+    if (card) {
+      for (const el of stack) {
+        const tag = el.tagName?.toLowerCase?.() || "";
+        if ((tag === "img" || tag === "picture") && card.contains(el)) {
+          return tag === "picture" ? (el.querySelector("img") || el) : el;
+        }
+      }
+    }
+
     for (const el of stack) {
-      if (!el || el === document.documentElement || el === document.body || isStudioNode(el)) continue;
       const tag = el.tagName?.toLowerCase?.() || "";
-
-      if (tag === "img" || tag === "picture") return tag === "picture" ? (el.querySelector("img") || el) : el;
-
+      if (tag === "img") return el;
+      if (tag === "picture") return el.querySelector("img") || el;
       if (["path","circle","rect","line","polyline","polygon"].includes(tag)) {
         const chart = chartRoot(el);
         if (chart) return chart;
         return el.closest("svg") || el;
       }
-
       if (tag === "svg") {
         const chart = chartRoot(el);
         return chart || el;
       }
-
       const chart = chartRoot(el);
       if (chart) return chart;
+    }
 
+    for (const el of stack) {
       const bg = getComputedStyle(el).backgroundImage;
       if (bg && bg !== "none") return el;
 
