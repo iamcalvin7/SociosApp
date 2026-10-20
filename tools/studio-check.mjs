@@ -43,16 +43,6 @@ await page.selectOption("#studioDraftSelect", draft);
 await page.waitForTimeout(250);
 ok("draft can be reselected", await page.locator("#studioDraftSelect").inputValue() === draft);
 
-ok("no uncaught studio errors", errors.length === 0, errors[0] || "");
-await browser.close();
-
-if (failures) {
-  console.error(`\n${failures} Socios Studio check(s) failed.`);
-  process.exit(1);
-}
-console.log("\nSocios Studio checks passed.");
-
-
 /* Studio editability regressions */
 await page.goto(BASE + "/__dse/editor", { waitUntil: "domcontentloaded", timeout: 20000 });
 await page.waitForTimeout(1200);
@@ -102,3 +92,12 @@ if (bgSelected) {
   await page.waitForTimeout(200);
   ok("CSS background image can be replaced", (await page.locator("#socios-studio-inspector").textContent()).includes("Background image"));
 }
+
+ok("no uncaught studio errors", errors.length === 0, errors[0] || "");
+await browser.close();
+
+if (failures) {
+  console.error(`\n${failures} Socios Studio check(s) failed.`);
+  process.exit(1);
+}
+console.log("\nSocios Studio checks passed.");
