@@ -37,3 +37,5 @@ html[data-studio-original] #socios-studio-inspector{display:none!important}
 html[data-studio-original] #socios-studio-toolbar .studio-state{color:#fff}
 #dse-open-editor{display:none!important}
 @media(max-width:760px){#socios-studio-toolbar{left:8px;right:8px;transform:none;overflow:auto;justify-content:flex-start}#socios-studio-inspector{left:8px;right:8px;bottom:8px;top:auto;width:auto;max-height:58vh}}
+
+html[data-studio-active] aside[aria-label="Presenter panel"]{display:none!important}
