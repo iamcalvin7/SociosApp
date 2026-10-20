@@ -248,7 +248,6 @@
       const tag = el.tagName?.toLowerCase?.() || "";
       if (tag === "img") return el;
       if (tag === "picture") return el.querySelector("img") || el;
-      const tag = el.tagName?.toLowerCase?.() || "";
       if (["path","circle","rect","line","polyline","polygon"].includes(tag)) {
         const chart = chartRoot(el);
         if (chart) return chart;
