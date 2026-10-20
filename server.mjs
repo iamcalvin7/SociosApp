@@ -135,6 +135,7 @@ async function sendPageHtml(res, file, { status = 200, cache = "no-store" } = {}
 async function dseFileFor(reqPath) {
   let rel = reqPath.replace(/^\/__dse\/?/, "");
   if (!rel || rel === "editor") rel = "editor.html";
+  if (rel === "legacy") rel = "legacy.html";
   const file = safeJoin(OVERLAY, "/" + rel);
   if (!file) return null;
   return (await isFile(file)) ? file : null;
