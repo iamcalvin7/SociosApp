@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 395" width="300" height="395">
+  <!-- Captain's armband — club-neutral auction artwork, styled after the
+       rewards catalogue set (portrait card, echo type, confetti, sparkle). -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#15214b"/>
+      <stop offset="1" stop-color="#0a1130"/>
+    </linearGradient>
+    <linearGradient id="band" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffd75e"/>
+      <stop offset="0.5" stop-color="#f0b429"/>
+      <stop offset="1" stop-color="#c98a12"/>
+    </linearGradient>
+    <linearGradient id="bandShade" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#000" stop-opacity="0.35"/>
+      <stop offset="0.18" stop-color="#000" stop-opacity="0"/>
+      <stop offset="0.82" stop-color="#000" stop-opacity="0"/>
+      <stop offset="1" stop-color="#000" stop-opacity="0.35"/>
+    </linearGradient>
+    <clipPath id="frame"><rect x="0" y="0" width="300" height="395" rx="16"/></clipPath>
+  </defs>
+  <g clip-path="url(#frame)">
+    <rect width="300" height="395" fill="url(#bg)"/>
+    <!-- echo type -->
+    <g fill="#ffffff" opacity="0.06" font-family="Arial Black, Arial, sans-serif" font-weight="900" font-size="64" letter-spacing="4">
+      <text x="-14" y="60">CAPTAIN</text>
+      <text x="30" y="382">CAPTAIN</text>
+      <text x="248" y="30" transform="rotate(90 248 30)">CAPTAIN</text>
+    </g>
+    <!-- confetti -->
+    <g>
+      <rect x="52" y="84" width="9" height="4" rx="2" fill="#ffd75e" transform="rotate(28 56 86)"/>
+      <rect x="238" y="70" width="10" height="4" rx="2" fill="#7f9bff" transform="rotate(-22 243 72)"/>
+      <rect x="216" y="300" width="9" height="4" rx="2" fill="#ffd75e" transform="rotate(40 220 302)"/>
+      <rect x="62" y="312" width="10" height="4" rx="2" fill="#ffffff" opacity="0.8" transform="rotate(-30 67 314)"/>
+      <circle cx="86" cy="128" r="3" fill="#7f9bff"/>
+      <circle cx="230" cy="118" r="2.5" fill="#ffffff" opacity="0.85"/>
+      <circle cx="245" cy="260" r="3" fill="#ffd75e"/>
+      <circle cx="50" cy="248" r="2.5" fill="#ffd75e"/>
+    </g>
+    <!-- the armband: a fabric cylinder, slightly elliptical, big C -->
+    <g transform="translate(150 200)">
+      <ellipse cx="0" cy="0" rx="92" ry="112" fill="#000" opacity="0.35" transform="translate(6 12)"/>
+      <path d="M -88 -74 A 88 26 0 0 1 88 -74 L 88 74 A 88 26 0 0 1 -88 74 Z" fill="url(#band)"/>
+      <path d="M -88 -74 A 88 26 0 0 1 88 -74 L 88 74 A 88 26 0 0 1 -88 74 Z" fill="url(#bandShade)"/>
+      <!-- top opening -->
+      <ellipse cx="0" cy="-74" rx="88" ry="26" fill="#8a5f0b"/>
+      <ellipse cx="0" cy="-74" rx="80" ry="21" fill="#0a1130"/>
+      <!-- stitched edges -->
+      <path d="M -88 62 A 88 26 0 0 0 88 62" fill="none" stroke="#8a5f0b" stroke-width="3" stroke-dasharray="7 6" opacity="0.8"/>
+      <path d="M -88 -60 A 88 26 0 0 0 88 -60" fill="none" stroke="#8a5f0b" stroke-width="3" stroke-dasharray="7 6" opacity="0.55"/>
+      <!-- the C -->
+      <text x="0" y="42" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-weight="900" font-size="96" fill="#15214b">C</text>
+    </g>
+    <!-- sparkle (set signature, bottom-right) -->
+    <path d="M272 362 l4.5 10 10 4.5 -10 4.5 -4.5 10 -4.5 -10 -10 -4.5 10 -4.5 z" fill="#ffffff" opacity="0.95"/>
+  </g>
+</svg>

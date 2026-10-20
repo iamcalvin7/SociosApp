@@ -1,0 +1,15 @@
+{
+  "name": "socios-app",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Local fork of the Socios redesign prototype build (socios-redesign-prototype.vercel.app)",
+  "scripts": {
+    "start": "node server.mjs",
+    "resync": "node tools/mirror-crawl.mjs",
+    "check": "node tools/editor-check.mjs"
+  },
+  "devDependencies": {
+    "playwright": "^1.64.0"
+  }
+}

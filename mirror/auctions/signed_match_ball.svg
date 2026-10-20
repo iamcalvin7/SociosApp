@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 395" width="300" height="395">
+  <!-- Signed match ball — club-neutral auction artwork, styled after the
+       rewards catalogue set (portrait card, echo type, confetti, sparkle). -->
+  <defs>
+    <radialGradient id="bg" cx="0.5" cy="0.35" r="1">
+      <stop offset="0" stop-color="#3a3f52"/>
+      <stop offset="1" stop-color="#181b26"/>
+    </radialGradient>
+    <radialGradient id="leather" cx="0.38" cy="0.3" r="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="0.75" stop-color="#e9e6df"/>
+      <stop offset="1" stop-color="#bdb8ac"/>
+    </radialGradient>
+    <clipPath id="frame"><rect x="0" y="0" width="300" height="395" rx="16"/></clipPath>
+    <clipPath id="ballClip"><circle cx="150" cy="204" r="92"/></clipPath>
+  </defs>
+  <g clip-path="url(#frame)">
+    <rect width="300" height="395" fill="url(#bg)"/>
+    <!-- echo type -->
+    <g fill="#ffffff" opacity="0.06" font-family="Arial Black, Arial, sans-serif" font-weight="900" font-size="58" letter-spacing="4">
+      <text x="-12" y="54">MATCHDAY</text>
+      <text x="16" y="384">MATCHDAY</text>
+      <text x="252" y="26" transform="rotate(90 252 26)">MATCHDAY</text>
+    </g>
+    <!-- confetti -->
+    <g>
+      <rect x="50" y="86" width="9" height="4" rx="2" fill="#e8c05a" transform="rotate(26 54 88)"/>
+      <rect x="240" y="102" width="10" height="4" rx="2" fill="#ffffff" opacity="0.8" transform="rotate(-24 245 104)"/>
+      <rect x="228" y="318" width="9" height="4" rx="2" fill="#e8c05a" transform="rotate(38 232 320)"/>
+      <rect x="54" y="322" width="10" height="4" rx="2" fill="#8fa2ff" transform="rotate(-32 59 324)"/>
+      <circle cx="78" cy="126" r="2.5" fill="#8fa2ff"/>
+      <circle cx="236" cy="176" r="3" fill="#e8c05a"/>
+      <circle cx="56" cy="230" r="2.5" fill="#e8c05a"/>
+    </g>
+    <!-- the ball -->
+    <ellipse cx="156" cy="308" rx="84" ry="16" fill="#000" opacity="0.4"/>
+    <circle cx="150" cy="204" r="92" fill="url(#leather)"/>
+    <g clip-path="url(#ballClip)" fill="#23262f">
+      <!-- centre pentagon -->
+      <path d="M150 158 l40 29 -15.3 47 -49.4 0 -15.3 -47 z"/>
+      <!-- surrounding panels, curved out of frame -->
+      <path d="M150 112 l26 -34 30 12 -8 40 -26 8 z" transform="rotate(8 150 204)"/>
+      <path d="M242 186 l38 -6 12 30 -30 26 -26 -12 z"/>
+      <path d="M216 282 l36 16 -4 32 -40 4 -14 -26 z"/>
+      <path d="M84 282 l-36 16 4 32 40 4 14 -26 z"/>
+      <path d="M58 186 l-38 -6 -12 30 30 26 26 -12 z"/>
+      <path d="M124 78 l-26 -20 -28 16 10 38 30 6 z"/>
+    </g>
+    <g clip-path="url(#ballClip)" fill="none" stroke="#23262f" stroke-width="3" opacity="0.5">
+      <path d="M110 234 Q150 252 190 234"/>
+      <path d="M124 138 Q150 128 176 138"/>
+    </g>
+    <!-- specular -->
+    <ellipse cx="118" cy="164" rx="34" ry="20" fill="#ffffff" opacity="0.5" transform="rotate(-24 118 164)"/>
+    <!-- the signature -->
+    <path d="M96 296 q14 -22 20 -4 q4 12 16 -8 q10 -16 16 2 q5 14 18 -6 q9 -13 20 -1 q8 9 22 -8"
+          fill="none" stroke="#2b4bd8" stroke-width="3.5" stroke-linecap="round" opacity="0.9" transform="rotate(-6 150 290)"/>
+    <!-- sparkle -->
+    <path d="M272 362 l4.5 10 10 4.5 -10 4.5 -4.5 10 -4.5 -10 -10 -4.5 10 -4.5 z" fill="#ffffff" opacity="0.95"/>
+  </g>
+</svg>

@@ -1,0 +1,139 @@
+{
+  "themeVersion": 1,
+  "meta": {
+    "name": "Complete Portable Theme Example",
+    "description": "Fully populated themeVersion 1 file: every supported foundation and component override."
+  },
+  "colors": {
+    "primary": "#3137ff",
+    "primaryHover": "#252ae5",
+    "primarySubtle": "#e7e9ff",
+    "background": "#f3f6ff",
+    "surface": "#ffffff",
+    "strongSurface": "#171c86",
+    "primaryText": "#090a12",
+    "secondaryText": "#666a82",
+    "mutedText": "#979bad",
+    "textOnPrimary": "#ffffff",
+    "textOnStrongSurface": "#f4f2ff",
+    "border": "#e7e9f0",
+    "positive": "#0f9d58",
+    "negative": "#d93025",
+    "warning": "#b26a00"
+  },
+  "typography": {
+    "display": {
+      "weight": 800,
+      "lineHeight": 0.95,
+      "letterSpacing": "-0.03em",
+      "family": "Space Grotesk"
+    },
+    "heading": {
+      "weight": 700,
+      "lineHeight": 1.15,
+      "letterSpacing": "-0.01em",
+      "family": "Space Grotesk"
+    },
+    "body": {
+      "weight": 400,
+      "lineHeight": 1.45,
+      "letterSpacing": "0em",
+      "family": "Inter"
+    },
+    "cta": {
+      "weight": 600,
+      "lineHeight": 1,
+      "letterSpacing": "0.01em",
+      "family": "Inter"
+    }
+  },
+  "shape": {
+    "buttonRadius": 999,
+    "cardRadius": 16,
+    "largeCardRadius": 20,
+    "inputRadius": 12
+  },
+  "spacing": {
+    "xs": 4,
+    "sm": 8,
+    "md": 16,
+    "lg": 24,
+    "xl": 32,
+    "2xl": 48,
+    "3xl": 72
+  },
+  "buttons": {
+    "primary": {
+      "background": "#3137ff",
+      "hover": "#252ae5",
+      "text": "#ffffff",
+      "border": "#3137ff",
+      "radius": 999,
+      "shadow": {
+        "x": 0,
+        "y": 8,
+        "blur": 24,
+        "spread": -8,
+        "color": "#3137ff",
+        "alpha": 0.35
+      }
+    },
+    "secondary": {
+      "background": "transparent",
+      "hover": "#e7e9ff",
+      "text": "#090a12",
+      "border": "#e7e9f0",
+      "radius": 999,
+      "shadow": "none"
+    }
+  },
+  "cards": {
+    "standard": {
+      "background": "#ffffff",
+      "text": "#090a12",
+      "border": "#e7e9f0",
+      "radius": 16,
+      "shadow": "none"
+    },
+    "feature": {
+      "background": "#171c86",
+      "text": "#ffffff",
+      "border": "#3137ff",
+      "radius": 20,
+      "shadow": {
+        "x": 0,
+        "y": 12,
+        "blur": 32,
+        "spread": -8,
+        "color": "#000000",
+        "alpha": 0.25
+      }
+    }
+  },
+  "effects": {
+    "shadow": "0 8px 24px -8px rgba(17,18,44,0.18)",
+    "blur": "blur(16px)"
+  },
+  "fonts": [
+    {
+      "family": "Space Grotesk",
+      "role": "display"
+    },
+    {
+      "family": "Space Grotesk",
+      "role": "heading"
+    },
+    {
+      "family": "Inter",
+      "role": "body"
+    },
+    {
+      "family": "Inter",
+      "role": "cta"
+    }
+  ],
+  "assets": {
+    "logo": "/assets/logo.svg",
+    "hero": "/assets/hero.webp"
+  }
+}
