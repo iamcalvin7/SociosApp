@@ -104,7 +104,7 @@ function sendFile(res, file, { status = 200, cache = "no-store" } = {}) {
   stream.pipe(res);
 }
 
-const DSE_SCRIPT = '<link id="dse-premium-css" rel="stylesheet" href="/__dse/premium-redesign.css" media="not all"><script src="/__dse/apply.js" defer></script>';
+const DSE_SCRIPT = '<link id="dse-premium-css" rel="stylesheet" href="/__dse/premium-redesign.css" media="not all"><link rel="stylesheet" href="/__dse/studio.css"><script src="/__dse/apply.js" defer></script><script src="/__dse/studio.js" defer></script>';
 
 function injectDse(html) {
   if (html.includes("/__dse/apply.js")) return html;
