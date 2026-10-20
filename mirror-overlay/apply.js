@@ -323,7 +323,24 @@
     }
   }
 
+  const ACTIVE_CONCEPT_KEY = "dse.active.concept.v1";
+  const THEMES_KEY = "dse.themes.v1";
+
+  function syncPremiumPreset() {
+    const link = document.getElementById("dse-premium-css");
+    if (!link) return;
+    let active = "";
+    let preset = "";
+    try {
+      active = localStorage.getItem(ACTIVE_CONCEPT_KEY) || "";
+      const themes = JSON.parse(localStorage.getItem(THEMES_KEY) || "{}");
+      preset = themes && themes[active] && themes[active].preset ? themes[active].preset : "";
+    } catch {}
+    link.media = preset === "premium-2026" || active === "Socios Premium 2026" ? "all" : "not all";
+  }
+
   function apply() {
+    syncPremiumPreset();
     let el = document.getElementById("dse-tokens");
     if (!el) {
       el = document.createElement("style");
@@ -592,6 +609,10 @@
   }
 
   window.addEventListener("storage", (e) => {
+    if (e.key === ACTIVE_CONCEPT_KEY || e.key === THEMES_KEY) {
+      syncPremiumPreset();
+      return;
+    }
     if (e.key !== KEY) return;
     load();
     apply();

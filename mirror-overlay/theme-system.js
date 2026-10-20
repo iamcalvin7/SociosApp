@@ -58,6 +58,12 @@
     },
   };
 
+  BUILTIN["socios-premium-2026"] = JSON.parse(JSON.stringify(BUILTIN["socios-2026-light"]));
+  BUILTIN["socios-premium-2026"].meta = {
+    name: "Socios Premium 2026",
+    description: "Premium application direction with the Socios 2026 Light foundations plus the redesigned responsive homepage, restrained surfaces and selective feature blues.",
+  };
+
   const SECTION_LABELS = {
     colors: "Colours",
     typography: "Typography",
