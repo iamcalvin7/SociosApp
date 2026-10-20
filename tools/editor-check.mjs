@@ -332,7 +332,7 @@ const mapped = await page.evaluate(() => {
   };
 });
 ok("theme mapper validates all sections", mapped.summary.length === 6 && mapped.summary.every((s) => s.present));
-ok("theme mapper writes brand tokens", mapped.brand === "#324CFF" && mapped.button === "#324CFF");
+ok("theme mapper writes brand tokens", mapped.brand?.toLowerCase() === "#324cff" && mapped.button?.toLowerCase() === "#324cff");
 ok("theme mapper writes shape and scoped rules", mapped.cardRadius === "20px" && mapped.scoped > 20, JSON.stringify(mapped));
 
 await page.click("#conceptMenuBtn");
@@ -374,7 +374,7 @@ const builtinState = await page.evaluate(() => {
     portable: concept && concept.portable && concept.portable.meta.name,
   };
 });
-ok("built-in theme stores mapped tokens", builtinState.brand === "#324CFF" && builtinState.scoped > 20, JSON.stringify(builtinState));
+ok("built-in theme stores mapped tokens", builtinState.brand?.toLowerCase() === "#324cff" && builtinState.scoped > 20, JSON.stringify(builtinState));
 ok("built-in theme is saved as an editable concept", builtinState.saved && builtinState.portable === "Socios 2026 Light");
 const builtinPrimary = await getFrame().evaluate(() => {
   const el = [...document.querySelectorAll('button[data-slot="button"]')].find(
