@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Socios Visual Editor</title>
+    <link rel="stylesheet" href="/__dse/editor.css" />
+  </head>
+  <body>
+    <div class="layout simple-layout">
+      <aside class="sidebar rail">
+        <div class="rail-head">
+          <div class="rail-kicker">Socios visual editor</div>
+          <div class="concept-row">
+            <select id="conceptSelect" class="concept-select" aria-label="Concept"></select>
+            <button id="conceptMenuBtn" class="concept-more" aria-label="Concept menu" title="Concept menu">▾</button>
+          </div>
+          <div class="concept-subrow">
+            <button id="btnUploadTheme" class="upload-theme" title="Upload a portable theme JSON">+ Upload theme</button>
+            <span id="savedState" class="saved-state">Saved</span>
+          </div>
+          <div id="conceptMenu" class="concept-menu" hidden>
+            <button data-concept="new">New concept</button>
+            <button data-concept="duplicate">Duplicate</button>
+            <button data-concept="rename">Rename</button>
+            <button data-concept="delete" class="danger-text">Delete</button>
+            <button data-concept="builtin" class="builtin-theme">Add Socios 2026 Light</button>
+          </div>
+        </div>
+
+        <button id="btnSelectMain" class="select-action" title="Click something in the app to edit it">Select something</button>
+        <button id="btnBrandMain" class="brand-action" title="Change the main brand colours and type">Change whole brand</button>
+
+        <div class="rail-spacer"></div>
+
+        <div class="rail-row two">
+          <button id="btnUndo" class="ghost" title="Undo (Cmd/Ctrl+Z)">Undo</button>
+          <button id="btnRedo" class="ghost" title="Redo (Cmd/Ctrl+Shift+Z)">Redo</button>
+        </div>
+
+        <div class="compare-switch" id="compareSwitch" role="group" aria-label="Compare original and edited">
+          <button data-compare="original" title="Show the original app">Original</button>
+          <button data-compare="concept" class="active" title="Show the edited concept">Edited</button>
+        </div>
+
+        <button id="btnExport" class="ghost rail-wide" title="Share your changes">Export</button>
+        <button id="btnAdvanced" class="advanced-link" title="Open the technical editor">Advanced</button>
+      </aside>
+
+      <main class="preview" id="previewShell">
+        <div class="preview-bar">
+          <span class="preview-title">Socios</span>
+          <select id="previewPage" class="page-select" aria-label="Preview page"></select>
+          <button id="btnReload" class="ghost" title="Reload preview">Reload</button>
+          <button id="btnNewTab" class="ghost" title="Open page in new tab">Open</button>
+          <span id="compareNote" class="compare-note" hidden>Showing original — hold C for a quick peek</span>
+        </div>
+        <div class="preview-stage">
+          <iframe id="preview" title="Live preview" src="/" loading="lazy"></iframe>
+          <div id="pickHint" class="pick-hint" hidden>Click anything in the app to edit it — <kbd>Esc</kbd> to cancel</div>
+
+          <aside id="simpleInspector" class="simple-panel inspector" hidden>
+            <div class="simple-panel-head">
+              <div>
+                <div id="siKind" class="simple-kicker">OBJECT</div>
+                <div id="siName" class="simple-title">Selected</div>
+              </div>
+              <button id="siClose" class="icon-btn" aria-label="Close inspector" title="Close">×</button>
+            </div>
+            <div id="siBody" class="simple-body"></div>
+            <div id="siSimilarWrap" class="similar-wrap" hidden>
+              <button id="siSimilar" class="ghost">Apply to all similar</button>
+            </div>
+            <div class="simple-panel-foot">
+              <button id="siReset" class="ghost danger-text">Reset</button>
+            </div>
+          </aside>
+
+          <section id="brandPanel" class="simple-panel brand-panel" hidden>
+            <div class="simple-panel-head">
+              <div>
+                <div class="simple-kicker">BRAND</div>
+                <div class="simple-title">Whole brand</div>
+              </div>
+              <button id="brandClose" class="icon-btn" aria-label="Close brand panel" title="Close">×</button>
+            </div>
+            <div id="brandBody" class="simple-body"></div>
+          </section>
+
+          <section id="themePanel" class="simple-panel theme-panel" hidden>
+            <div class="simple-panel-head">
+              <div>
+                <div class="simple-kicker">THEME</div>
+                <div id="themeTitle" class="simple-title">Theme detected</div>
+              </div>
+              <button id="themeClose" class="icon-btn" aria-label="Close theme import" title="Close">×</button>
+            </div>
+            <div id="themeBody" class="simple-body"></div>
+            <div class="theme-actions">
+              <button id="btnThemePreview" class="ghost">Preview</button>
+              <button id="btnThemeAdd" class="primary-btn">Add theme</button>
+              <button id="btnThemeCancel" class="ghost">Cancel</button>
+            </div>
+          </section>
+
+          <section id="exportPanel" class="simple-panel export-panel" hidden>
+            <div class="simple-panel-head">
+              <div>
+                <div class="simple-kicker">EXPORT</div>
+                <div class="simple-title">Share with team</div>
+              </div>
+              <button id="exportClose" class="icon-btn" aria-label="Close export panel" title="Close">×</button>
+            </div>
+            <div class="simple-body">
+              <div class="export-actions">
+                <button id="btnCopyChanges" class="primary-btn">Copy changes</button>
+                <button id="btnExportJson" class="ghost">Download JSON</button>
+                <button id="btnExportAssets" class="ghost">Download assets</button>
+              </div>
+              <pre id="exportReport" class="export-report"></pre>
+              <details id="developerDetails" class="developer-details">
+                <summary>Developer details</summary>
+                <pre id="developerReport" class="export-report technical"></pre>
+              </details>
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+
+    <section id="advancedDrawer" class="advanced-drawer" hidden>
+      <header class="advanced-head">
+        <div>
+          <div class="simple-kicker">ADVANCED</div>
+          <div class="simple-title">Technical editor</div>
+        </div>
+        <button id="btnCloseAdvanced" class="ghost">Back to editor</button>
+      </header>
+      <div class="advanced-layout">
+        <aside class="sidebar advanced-side">
+          <div class="side-section">
+            <div class="side-label">Preview state</div>
+            <div class="theme-tabs" id="previewStateTabs" role="tablist" aria-label="App sign-in state in preview">
+              <button role="tab" data-state="guest" aria-selected="false">Guest</button>
+              <button role="tab" data-state="member" aria-selected="true">Signed in</button>
+            </div>
+          </div>
+          <div class="side-section">
+            <div class="side-label">Theme being edited</div>
+            <div class="theme-tabs" id="themeTabs" role="tablist" aria-label="Theme being edited">
+              <button role="tab" data-theme="dark" aria-selected="true">Dark</button>
+              <button role="tab" data-theme="light" aria-selected="false">Light</button>
+            </div>
+          </div>
+          <div class="side-section">
+            <div class="side-label">Selection</div>
+            <button id="btnPick" class="pick-btn" title="Inspect an element in the preview">Pick element</button>
+          </div>
+          <div class="side-section advanced-section">
+            <details id="advancedBox" class="advanced-box" open>
+              <summary>Raw tokens</summary>
+              <div class="scope-wrap">
+                <select id="scopeSelect" class="scope-select" aria-label="Token scope">
+                  <option value="universal">All pages (universal)</option>
+                </select>
+              </div>
+              <button id="btnRemoveScope" class="ghost danger-text side-btn" hidden>Clear this page's edits</button>
+              <nav id="groupNav" class="grouplist grouplist-advanced" aria-label="Raw token groups"></nav>
+              <div class="side-actions">
+                <button id="btnExportLegacy" class="ghost side-btn" hidden>Export raw JSON</button>
+                <button id="btnImport" class="ghost side-btn">Import JSON</button>
+                <button id="btnResetAll" class="danger side-btn">Reset everything</button>
+              </div>
+            </details>
+          </div>
+        </aside>
+        <main class="tokens" id="tokenPanel">
+          <div class="panel-head">
+            <h2 id="groupTitle">Raw tokens</h2>
+            <input id="filter" type="search" placeholder="Filter…" aria-label="Filter" />
+            <label class="toggle"><input type="checkbox" id="onlyEdited" /> Edited only</label>
+          </div>
+          <div id="pickResult" class="pick-result" hidden></div>
+          <div id="tokenList" class="token-list"></div>
+        </main>
+      </div>
+    </section>
+
+    <input type="file" id="importFile" accept="application/json,.json" hidden />
+    <input type="file" id="themeFile" accept="application/json,.json" hidden />
+    <input type="file" id="assetFile" accept="image/*" hidden />
+    <input type="file" id="libFile" accept="image/*,.svg" multiple hidden />
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    <script src="/__dse/theme-system.js"></script>
+    <script src="/__dse/editor.js"></script>
+  </body>
+</html>
