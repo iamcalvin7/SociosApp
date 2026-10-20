@@ -23,6 +23,7 @@ Studio replaces the iframe-based editor as the default workflow.
 - Duplicate an existing draft to branch a design direction.
 - Drafts autosave in the browser and can be renamed.
 - Switch between Original and drafts from the top floating toolbar.
+- Use **Browse** to navigate the app normally and **Edit** to resume click-to-edit selection.
 
 ### Edit the actual page
 
