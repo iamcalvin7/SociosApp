@@ -43,6 +43,56 @@ await page.selectOption("#studioDraftSelect", draft);
 await page.waitForTimeout(250);
 ok("draft can be reselected", await page.locator("#studioDraftSelect").inputValue() === draft);
 
+/* Studio editability regressions */
+await page.goto(BASE + "/__dse/editor", { waitUntil: "domcontentloaded", timeout: 20000 });
+await page.waitForTimeout(1200);
+if ((await page.locator("#studioDraftSelect").inputValue()) === "__original") {
+  await page.click("#studioDuplicate");
+  await page.waitForTimeout(250);
+}
+const chartHit = await page.evaluate(() => {
+  const markets = document.querySelector('[data-widget-id="markets"]');
+  const svgs = [...(markets?.querySelectorAll("svg") || [])];
+  const candidate = svgs.find((svg) => {
+    const r = svg.getBoundingClientRect();
+    return r.width >= 55 && r.height >= 14 && r.height <= 90 && r.width / Math.max(r.height,1) >= 1.7;
+  });
+  if (!candidate) return false;
+  const child = candidate.querySelector("path,line,rect,circle,polyline,polygon") || candidate;
+  child.dispatchEvent(new MouseEvent("click", { bubbles:true, cancelable:true, view:window }));
+  return true;
+});
+if (chartHit) {
+  await page.waitForTimeout(200);
+  ok("small market sparkline is treated as chart", (await page.locator("#socios-studio-inspector .studio-kicker").textContent()) === "CHART");
+}
+
+const buttonSelected = await page.evaluate(() => {
+  const b = [...document.querySelectorAll("button,a")].find((e) => /Buy your first fan token/i.test((e.textContent||"").trim()));
+  if (!b) return false;
+  b.dispatchEvent(new MouseEvent("click",{bubbles:true,cancelable:true,view:window}));
+  return true;
+});
+if (buttonSelected) {
+  await page.waitForTimeout(200);
+  ok("CTA exposes button fill control", (await page.locator("#socios-studio-inspector").textContent()).includes("Button fill"));
+}
+
+const bgSelected = await page.evaluate(() => {
+  const el = [...document.querySelectorAll("section,div")].find((e) => {
+    const bg = getComputedStyle(e).backgroundImage;
+    const r=e.getBoundingClientRect();
+    return bg && bg !== "none" && r.width > 300 && r.height > 150;
+  });
+  if (!el) return false;
+  el.dispatchEvent(new MouseEvent("click",{bubbles:true,cancelable:true,view:window}));
+  return true;
+});
+if (bgSelected) {
+  await page.waitForTimeout(200);
+  ok("CSS background image can be replaced", (await page.locator("#socios-studio-inspector").textContent()).includes("Background image"));
+}
+
 ok("no uncaught studio errors", errors.length === 0, errors[0] || "");
 await browser.close();
 

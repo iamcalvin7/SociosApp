@@ -271,8 +271,15 @@
     if (!svg) return null;
     const r = svg.getBoundingClientRect();
     const marks = svg.querySelectorAll("path,line,rect,circle,polyline,polygon").length;
-    const hint = (svg.getAttribute("class") || "") + " " + (svg.parentElement?.getAttribute("class") || "");
-    if (/chart|recharts|plot|spark|victory|highcharts/i.test(hint) || (r.width > 140 && r.height > 60 && marks >= 8)) return svg;
+    const hint = [
+      svg.getAttribute("class") || "",
+      svg.getAttribute("aria-label") || "",
+      svg.parentElement?.getAttribute("class") || "",
+      svg.parentElement?.getAttribute("aria-label") || "",
+      svg.closest?.("[data-widget-id]")?.getAttribute("data-widget-id") || ""
+    ].join(" ");
+    const wideMiniChart = r.width >= 55 && r.height >= 14 && r.height <= 90 && r.width / Math.max(r.height, 1) >= 1.7 && marks >= 2;
+    if (/chart|recharts|plot|spark|trend|mover|market|victory|highcharts/i.test(hint) || (r.width > 140 && r.height > 60 && marks >= 8) || wideMiniChart) return svg;
     return null;
   }
 
@@ -569,12 +576,37 @@
 
     if (kind !== "Chart" && kind !== "SVG" && kind !== "Image") {
       const s = section(body,"Appearance");
-      colorRow(s,"Background","background-color");
-      if (kind !== "Text" && kind !== "Button") colorRow(s,"Colour","color");
+      if (kind === "Button") {
+        const bg = input(currentStyle("background"),(v)=>applyStyle("background",v));
+        addRow(s,"Button fill",bg);
+        colorRow(s,"Text colour","color");
+      } else {
+        colorRow(s,"Background","background-color");
+        if (kind !== "Text") colorRow(s,"Colour","color");
+      }
       colorRow(s,"Border","border-color");
       addRow(s,"Border width",input(currentStyle("border-width"),(v)=>applyStyle("border-width",v)));
       addRow(s,"Radius",input(currentStyle("border-radius"),(v)=>applyStyle("border-radius",v)));
       addRow(s,"Opacity",input(currentStyle("opacity"),(v)=>applyStyle("opacity",v)));
+    }
+
+    if (kind !== "Image" && kind !== "SVG" && kind !== "Chart") {
+      const bgImage = currentStyle("background-image");
+      const hasBgImage = bgImage && bgImage !== "none";
+      const s = section(body, hasBgImage ? "Background image" : "Background media");
+      if (hasBgImage) {
+        const current = document.createElement("div");
+        current.className = "studio-note";
+        current.textContent = "This element uses a CSS background image. Replace it here.";
+        s.appendChild(current);
+      }
+      const file = input("",()=>{},"file");
+      file.accept = "image/*";
+      file.onchange = () => replaceAsset(file.files?.[0]);
+      addRow(s,"Replace",file);
+      addRow(s,"Size",input(currentStyle("background-size"),(v)=>applyStyle("background-size",v)));
+      addRow(s,"Position",input(currentStyle("background-position"),(v)=>applyStyle("background-position",v)));
+      addRow(s,"Repeat",selectControl(currentStyle("background-repeat"),["","no-repeat","repeat","repeat-x","repeat-y"],(v)=>applyStyle("background-repeat",v)));
     }
 
     const layout = section(body,"Layout");
