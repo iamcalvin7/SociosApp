@@ -32,7 +32,7 @@ if (await target.count()) {
   await target.click({ force: true });
   await page.waitForTimeout(300);
   ok("clicking live element opens inspector", await page.locator("#socios-studio-inspector").isVisible());
-  ok("inspector has generic CSS fallback", (await page.locator("#socios-studio-inspector").textContent()).includes("Any CSS property"));
+  ok("inspector has generic CSS fallback", (await page.locator("#socios-studio-inspector").textContent()).includes("Advanced CSS"));
 }
 
 await page.selectOption("#studioDraftSelect", "__original");
@@ -75,7 +75,7 @@ const buttonSelected = await page.evaluate(() => {
 });
 if (buttonSelected) {
   await page.waitForTimeout(200);
-  ok("CTA exposes button fill control", (await page.locator("#socios-studio-inspector").textContent()).includes("Button fill"));
+  ok("CTA exposes button fill control", (await page.locator("#socios-studio-inspector").textContent()).includes("Button colour"));
 }
 
 const bgSelected = await page.evaluate(() => {
