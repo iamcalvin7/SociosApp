@@ -141,7 +141,7 @@ if (await textTarget.count()) {
   if (box) {
     await page.mouse.click(box.x + Math.min(30, box.width / 2), box.y + Math.min(16, box.height / 2));
     await page.waitForTimeout(150);
-    ok("font family is a dropdown", (await page.locator("#socios-studio-inspector select").evaluateAll((els) => els.some((el) => [...el.options].some((o) => /Alcyone/.test(o.text)))));
+    ok("font family is a dropdown", (await page.locator("#socios-studio-inspector select").evaluateAll((els) => els.some((el) => [...el.options].some((o) => /Alcyone/.test(o.text))))));
   }
 }
 
