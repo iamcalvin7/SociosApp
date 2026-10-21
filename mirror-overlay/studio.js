@@ -445,7 +445,62 @@
     return s;
   }
 
-  function section(body, title) {
+  function labeledSelect(value, options, onCommit) {
+    const s = document.createElement("select");
+    for (const [label, val] of options) s.appendChild(new Option(label, val));
+    const exact = options.some(([,val]) => val === value);
+    s.value = exact ? value : "";
+    s.onchange = () => onCommit(s.value);
+    return s;
+  }
+
+  function fontFamilyControl() {
+    const raw = currentStyle("font-family");
+    const first = raw.split(",")[0].replace(/["']/g,"").trim().toLowerCase();
+    let value = "";
+    if (first === "alcyone") value = 'Alcyone, serif';
+    else if (first === "inter" || first === "inter fallback") value = 'Inter, "Inter Fallback", ui-sans-serif, system-ui, sans-serif';
+    else if (/arial|helvetica/.test(first)) value = 'Arial, Helvetica, sans-serif';
+    else if (/georgia/.test(first)) value = 'Georgia, serif';
+    const control = labeledSelect(value,[
+      ["Keep current",""],
+      ["Alcyone — Brand","Alcyone, serif"],
+      ["Inter — UI","Inter, \"Inter Fallback\", ui-sans-serif, system-ui, sans-serif"],
+      ["Arial","Arial, Helvetica, sans-serif"],
+      ["Georgia","Georgia, serif"]
+    ],(v)=>{ if (v) applyStyle("font-family",v); });
+    control.title = raw;
+    return control;
+  }
+
+  function solidBackgroundRow(parent, label) {
+    const wrap = document.createElement("div");
+    wrap.className = "studio-inline studio-colour-control";
+    const initial = rgbToHex(currentStyle("background-color"));
+    const c = input(initial,(v)=>{},"color");
+    const t = input(initial,(v)=>{});
+    const apply = (v) => {
+      c.value = rgbToHex(v);
+      t.value = c.value;
+      applyStyle("background",c.value);
+      applyStyle("background-image","none");
+    };
+    c.oninput = () => apply(c.value);
+    t.onchange = () => apply(t.value);
+    wrap.append(c,t);
+    addRow(parent,label,wrap);
+  }
+
+  function section(body, title, collapsed = false) {
+    if (collapsed) {
+      const d = document.createElement("details");
+      d.className = "studio-section studio-advanced";
+      const summary = document.createElement("summary");
+      summary.textContent = title;
+      d.appendChild(summary);
+      body.appendChild(d);
+      return d;
+    }
     const s = document.createElement("div");
     s.className = "studio-section";
     const h = document.createElement("h4");
@@ -588,7 +643,7 @@
       ta.value = (selected.textContent || "").trim();
       ta.onchange = () => applyText(ta.value);
       addRow(s,"Text",ta);
-      addRow(s,"Font",input(currentStyle("font-family"),(v)=>applyStyle("font-family",v)));
+      addRow(s,"Font family",fontFamilyControl());
       addRow(s,"Weight",input(currentStyle("font-weight"),(v)=>applyStyle("font-weight",v)));
       addRow(s,"Size",input(currentStyle("font-size"),(v)=>applyStyle("font-size",v)));
       addRow(s,"Line height",input(currentStyle("line-height"),(v)=>applyStyle("line-height",v)));
@@ -628,17 +683,17 @@
     }
 
     if (kind !== "Chart" && kind !== "SVG" && kind !== "Image") {
-      const s = section(body,"Appearance");
+      const s = section(body, kind === "Button" ? "Button style" : "Section style");
       if (kind === "Button") {
-        const bg = input(currentStyle("background"),(v)=>applyStyle("background",v));
-        addRow(s,"Button fill",bg);
+        solidBackgroundRow(s,"Button colour");
+        colorRow(s,"Text colour","color");
+      } else if (kind === "Text") {
         colorRow(s,"Text colour","color");
       } else {
-        colorRow(s,"Background","background-color");
-        if (kind !== "Text") colorRow(s,"Colour","color");
+        solidBackgroundRow(s,"Section colour");
+        colorRow(s,"Text colour","color");
       }
       colorRow(s,"Border","border-color");
-      addRow(s,"Border width",input(currentStyle("border-width"),(v)=>applyStyle("border-width",v)));
       addRow(s,"Radius",input(currentStyle("border-radius"),(v)=>applyStyle("border-radius",v)));
       addRow(s,"Opacity",input(currentStyle("opacity"),(v)=>applyStyle("opacity",v)));
     }
@@ -646,7 +701,7 @@
     if (kind !== "Image" && kind !== "SVG" && kind !== "Chart") {
       const bgImage = currentStyle("background-image");
       const hasBgImage = bgImage && bgImage !== "none";
-      const s = section(body, hasBgImage ? "Background image" : "Background media");
+      const s = section(body, hasBgImage ? "Background image" : "Background media", true);
       if (hasBgImage) {
         const current = document.createElement("div");
         current.className = "studio-note";
@@ -662,7 +717,7 @@
       addRow(s,"Repeat",selectControl(currentStyle("background-repeat"),["","no-repeat","repeat","repeat-x","repeat-y"],(v)=>applyStyle("background-repeat",v)));
     }
 
-    const layout = section(body,"Layout");
+    const layout = section(body,"Layout", true);
     addRow(layout,"Width",input(currentStyle("width"),(v)=>applyStyle("width",v)));
     addRow(layout,"Height",input(currentStyle("height"),(v)=>applyStyle("height",v)));
     addRow(layout,"Padding",input(currentStyle("padding"),(v)=>applyStyle("padding",v)));
@@ -673,7 +728,7 @@
     addRow(layout,"Justify",selectControl(currentStyle("justify-content"),["","flex-start","center","flex-end","space-between","space-around"],(v)=>applyStyle("justify-content",v)));
     addRow(layout,"Align",selectControl(currentStyle("align-items"),["","stretch","flex-start","center","flex-end"],(v)=>applyStyle("align-items",v)));
 
-    const advanced = section(body,"Any CSS property");
+    const advanced = section(body,"Advanced CSS", true);
     const prop = input("",()=>{});
     prop.placeholder = "e.g. box-shadow";
     const val = input("",()=>{});
@@ -692,7 +747,7 @@
     note.textContent = "This fallback means any CSS-capable property can be edited even if Studio has no dedicated control for it.";
     advanced.appendChild(note);
 
-    const actions = section(body,"Actions");
+    const actions = section(body,"More actions", true);
     const wrap = document.createElement("div");
     wrap.className = "studio-actions";
     const similar = document.createElement("button");
