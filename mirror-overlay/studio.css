@@ -39,3 +39,11 @@ html[data-studio-original] #socios-studio-toolbar .studio-state{color:#fff}
 @media(max-width:760px){#socios-studio-toolbar{left:8px;right:8px;transform:none;overflow:auto;justify-content:flex-start}#socios-studio-inspector{left:8px;right:8px;bottom:8px;top:auto;width:auto;max-height:58vh}}
 
 html[data-studio-active] aside[aria-label="Presenter panel"]{display:none!important}
+
+.studio-advanced{padding:0;border-bottom:1px solid #eef0f5}
+.studio-advanced summary{cursor:pointer;list-style:none;padding:12px 0;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#697088}
+.studio-advanced summary::-webkit-details-marker{display:none}
+.studio-advanced summary::after{content:"+";float:right;font-size:16px;line-height:10px;color:#9aa1b5}
+.studio-advanced[open] summary::after{content:"−"}
+.studio-advanced[open]{padding-bottom:12px}
+.studio-colour-control input[type="text"]{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}

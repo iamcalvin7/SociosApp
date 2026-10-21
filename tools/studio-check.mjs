@@ -32,7 +32,7 @@ if (await target.count()) {
   await target.click({ force: true });
   await page.waitForTimeout(300);
   ok("clicking live element opens inspector", await page.locator("#socios-studio-inspector").isVisible());
-  ok("inspector has generic CSS fallback", (await page.locator("#socios-studio-inspector").textContent()).includes("Any CSS property"));
+  ok("inspector has generic CSS fallback", (await page.locator("#socios-studio-inspector").textContent()).includes("Advanced CSS"));
 }
 
 await page.selectOption("#studioDraftSelect", "__original");
@@ -75,7 +75,7 @@ const buttonSelected = await page.evaluate(() => {
 });
 if (buttonSelected) {
   await page.waitForTimeout(200);
-  ok("CTA exposes button fill control", (await page.locator("#socios-studio-inspector").textContent()).includes("Button fill"));
+  ok("CTA exposes button fill control", (await page.locator("#socios-studio-inspector").textContent()).includes("Button colour"));
 }
 
 const bgSelected = await page.evaluate(() => {
@@ -120,7 +120,7 @@ ok("presenter panel is hidden in Studio", !presenterVisible);
 
 
 /* Nested media picker regression */
-const auctionImg = page.locator('[data-widget-id="auctions"] img').first();
+const auctionImg = page.locator('[data-widget-id="auctions"] img[src*="juventus_signed_shirt"]').first();
 if (await auctionImg.count()) {
   await auctionImg.scrollIntoViewIfNeeded();
   await page.waitForTimeout(250);
@@ -131,6 +131,29 @@ if (await auctionImg.count()) {
     ok("nested auction image wins over clickable card", (await page.locator("#socios-studio-inspector .studio-kicker").textContent()) === "IMAGE");
   }
 }
+
+
+
+/* Simplified inspector regressions */
+const textTarget = page.locator('p:visible').filter({ hasText: /Socios is where fans get their club/i }).first();
+if (await textTarget.count()) {
+  await textTarget.scrollIntoViewIfNeeded();
+  await page.waitForTimeout(180);
+  await textTarget.evaluate((el) => el.dispatchEvent(new PointerEvent("pointerdown",{bubbles:true,cancelable:true})));
+  await page.waitForTimeout(150);
+  ok("font family is a dropdown", (await page.locator("#socios-studio-inspector select").evaluateAll((els) => els.some((el) => [...el.options].some((o) => /Alcyone/.test(o.text))))));
+}
+
+const sectionTarget = page.locator('[data-widget-id="auctions"] section[aria-label="Auctions"]').first();
+if (await sectionTarget.count()) {
+  await sectionTarget.scrollIntoViewIfNeeded();
+  await page.waitForTimeout(180);
+  await sectionTarget.evaluate((el) => el.dispatchEvent(new PointerEvent("pointerdown",{bubbles:true,cancelable:true})));
+  await page.waitForTimeout(150);
+  ok("section colour control is visible", (await page.locator("#socios-studio-inspector").textContent()).includes("Section colour"));
+}
+
+ok("advanced controls are collapsed", (await page.locator("#socios-studio-inspector details.studio-advanced").count()) >= 2);
 
 ok("no uncaught studio errors", errors.length === 0, errors[0] || "");
 await browser.close();
