@@ -120,7 +120,7 @@ ok("presenter panel is hidden in Studio", !presenterVisible);
 
 
 /* Nested media picker regression */
-const auctionImg = page.locator('[data-widget-id="auctions"] img').first();
+const auctionImg = page.locator('[data-widget-id="auctions"] img[src*="juventus_signed_shirt"]').first();
 if (await auctionImg.count()) {
   await auctionImg.scrollIntoViewIfNeeded();
   await page.waitForTimeout(250);
@@ -135,24 +135,22 @@ if (await auctionImg.count()) {
 
 
 /* Simplified inspector regressions */
-const textTarget = page.locator('h1:visible, h2:visible, p:visible').first();
+const textTarget = page.locator('p:visible').filter({ hasText: /Socios is where fans get their club/i }).first();
 if (await textTarget.count()) {
-  const box = await textTarget.boundingBox();
-  if (box) {
-    await page.mouse.click(box.x + Math.min(30, box.width / 2), box.y + Math.min(16, box.height / 2));
-    await page.waitForTimeout(150);
-    ok("font family is a dropdown", (await page.locator("#socios-studio-inspector select").evaluateAll((els) => els.some((el) => [...el.options].some((o) => /Alcyone/.test(o.text))))));
-  }
+  await textTarget.scrollIntoViewIfNeeded();
+  await page.waitForTimeout(180);
+  await textTarget.evaluate((el) => el.dispatchEvent(new PointerEvent("pointerdown",{bubbles:true,cancelable:true})));
+  await page.waitForTimeout(150);
+  ok("font family is a dropdown", (await page.locator("#socios-studio-inspector select").evaluateAll((els) => els.some((el) => [...el.options].some((o) => /Alcyone/.test(o.text))))));
 }
 
-const sectionTarget = page.locator('[data-widget-id="auctions"] [role="button"]').first();
+const sectionTarget = page.locator('[data-widget-id="auctions"] section[aria-label="Auctions"]').first();
 if (await sectionTarget.count()) {
-  const box = await sectionTarget.boundingBox();
-  if (box) {
-    await page.mouse.click(box.x + box.width * 0.75, box.y + box.height * 0.5);
-    await page.waitForTimeout(150);
-    ok("section colour control is visible", (await page.locator("#socios-studio-inspector").textContent()).includes("Section colour"));
-  }
+  await sectionTarget.scrollIntoViewIfNeeded();
+  await page.waitForTimeout(180);
+  await sectionTarget.evaluate((el) => el.dispatchEvent(new PointerEvent("pointerdown",{bubbles:true,cancelable:true})));
+  await page.waitForTimeout(150);
+  ok("section colour control is visible", (await page.locator("#socios-studio-inspector").textContent()).includes("Section colour"));
 }
 
 ok("advanced controls are collapsed", (await page.locator("#socios-studio-inspector details.studio-advanced").count()) >= 2);
