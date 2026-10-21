@@ -132,6 +132,31 @@ if (await auctionImg.count()) {
   }
 }
 
+
+
+/* Simplified inspector regressions */
+const textTarget = page.locator('h1:visible, h2:visible, p:visible').first();
+if (await textTarget.count()) {
+  const box = await textTarget.boundingBox();
+  if (box) {
+    await page.mouse.click(box.x + Math.min(30, box.width / 2), box.y + Math.min(16, box.height / 2));
+    await page.waitForTimeout(150);
+    ok("font family is a dropdown", (await page.locator("#socios-studio-inspector select").evaluateAll((els) => els.some((el) => [...el.options].some((o) => /Alcyone/.test(o.text)))));
+  }
+}
+
+const sectionTarget = page.locator('[data-widget-id="auctions"] [role="button"]').first();
+if (await sectionTarget.count()) {
+  const box = await sectionTarget.boundingBox();
+  if (box) {
+    await page.mouse.click(box.x + box.width * 0.75, box.y + box.height * 0.5);
+    await page.waitForTimeout(150);
+    ok("section colour control is visible", (await page.locator("#socios-studio-inspector").textContent()).includes("Section colour"));
+  }
+}
+
+ok("advanced controls are collapsed", (await page.locator("#socios-studio-inspector details.studio-advanced").count()) >= 2);
+
 ok("no uncaught studio errors", errors.length === 0, errors[0] || "");
 await browser.close();
 
