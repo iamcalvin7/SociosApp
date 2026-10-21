@@ -244,10 +244,14 @@
       }
     }
 
+    // Otherwise honor visual stacking order. Evaluate each hit element fully
+    // before considering anything behind it, so background/decorative media
+    // cannot steal selection from visible text or containers.
     for (const el of stack) {
       const tag = el.tagName?.toLowerCase?.() || "";
       if (tag === "img") return el;
       if (tag === "picture") return el.querySelector("img") || el;
+
       if (["path","circle","rect","line","polyline","polygon"].includes(tag)) {
         const chart = chartRoot(el);
         if (chart) return chart;
@@ -257,11 +261,10 @@
         const chart = chartRoot(el);
         return chart || el;
       }
+
       const chart = chartRoot(el);
       if (chart) return chart;
-    }
 
-    for (const el of stack) {
       const bg = getComputedStyle(el).backgroundImage;
       if (bg && bg !== "none") return el;
 
