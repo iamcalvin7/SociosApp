@@ -236,6 +236,14 @@
     // This avoids selecting decorative/background images sitting behind ordinary text.
     const card = stack[0]?.closest?.("a,button,[role='button']");
     if (card) {
+      if (hasPoint) {
+        const nestedImages = [...card.querySelectorAll("img,picture img")];
+        const hitImage = nestedImages.find((img) => {
+          const r = img.getBoundingClientRect();
+          return e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom;
+        });
+        if (hitImage) return hitImage;
+      }
       for (const el of stack) {
         const tag = el.tagName?.toLowerCase?.() || "";
         if ((tag === "img" || tag === "picture") && card.contains(el)) {
